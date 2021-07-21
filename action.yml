@@ -1,0 +1,14 @@
+name: "Operous ssh check"
+description: "SSH server vulnerability and security scanner with Operous"
+author: "Operous <talk@operous.dev>"
+inputs:
+  instanceName:
+    required: true
+    description: "Name of the registered instance on Operous"
+  accountToken:
+    required: true
+    description: "Operous account API token"
+
+runs:
+  using: "node12"
+  main: "dist/index.js"
