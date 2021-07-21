@@ -4,7 +4,8 @@
     "target": "es2020",
     "jsx": "preserve",
     "strictFunctionTypes": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "rootDir": "./src"
   },
   "exclude": ["node_modules", "**/node_modules/*"]
 }
