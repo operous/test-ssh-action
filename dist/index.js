@@ -2,20 +2,15 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = require("@actions/core");
 const graphql_request_1 = require("graphql-request");
-const queries = require("./queries");
-const operousUrl = "https://aba35aae5641.ngrok.io/graphql";
-const graphqlClient = new graphql_request_1.GraphQLClient(operousUrl);
+const requests_1 = require("./generated/requests");
+const operousUrl = "https://app.operous.dev/graphql";
+const graphqlClientBase = new graphql_request_1.GraphQLClient(operousUrl);
+const graphqlClient = requests_1.getSdk(graphqlClientBase);
 const sleep = (date) => new Promise((resolve) => setTimeout(resolve, date));
 const trackTestRun = async (instanceName, testRunId) => {
-    let statusEnum;
-    (function (statusEnum) {
-        statusEnum[statusEnum["FAILED"] = 0] = "FAILED";
-        statusEnum[statusEnum["SUCCESS"] = 1] = "SUCCESS";
-        statusEnum[statusEnum["RUNNING"] = 2] = "RUNNING";
-    })(statusEnum || (statusEnum = {}));
     while (true) {
         const testRun = await graphqlClient
-            .request(queries.getInstance, {
+            .instance({
             testRunId: testRunId,
             instanceName: instanceName,
         })
@@ -38,7 +33,7 @@ const trackTestRun = async (instanceName, testRunId) => {
 };
 const startTestRun = async (instanceId) => {
     return await graphqlClient
-        .request(queries.startTestRun, {
+        .startTestRun({
         instanceId: instanceId,
     })
         .then((response) => {
@@ -49,7 +44,7 @@ const startTestRun = async (instanceId) => {
     });
 };
 const checkToken = async () => {
-    return await graphqlClient.request(queries.checkToken).then((response) => {
+    return await graphqlClient.checkToken().then((response) => {
         if (typeof response.checkToken === "string" &&
             response.checkToken === "Token is valid!") {
             core.info("Token is valid.");
@@ -61,7 +56,7 @@ const checkToken = async () => {
     });
 };
 const getAccountInstance = async (instanceName) => {
-    return graphqlClient.request(queries.listInstances).then((response) => {
+    return await graphqlClient.instances().then((response) => {
         if (Array.isArray(response.instances)) {
             const matchedInstance = response.instances.filter((instance) => instance.name === instanceName || instance.identifier === instanceName)[0];
             return matchedInstance;
@@ -72,7 +67,7 @@ async function main() {
     try {
         const instanceName = core.getInput("instanceName", { required: true });
         const accountToken = core.getInput("accountToken", { required: true });
-        graphqlClient.setHeader("Authorization", `Token ${accountToken}`);
+        graphqlClientBase.setHeader("Authorization", `Token ${accountToken}`);
         const isTokenValid = await checkToken();
         if (!isTokenValid) {
             throw "Invalid token. Please verify if the token has expired or been deleted";
@@ -89,6 +84,10 @@ async function main() {
         const testsMessage = testRunData.tests
             .map((test) => `${test.passed ? "✅" : "❌"} ${test.id}: ${test.text}`)
             .join("\n");
+        const hasConnectivty = testRunData.tests.every((test) => test.passed != null);
+        if (!hasConnectivty) {
+            throw "Operous could not reach the server. Please verify the instance connectivity";
+        }
         const hasAllPassed = testRunData.tests.every((test) => test.passed === true);
         if (hasAllPassed) {
             core.info("\n" + testsMessage);

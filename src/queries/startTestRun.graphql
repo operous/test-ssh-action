@@ -1,0 +1,3 @@
+mutation startTestRun($instanceId: ID!) {
+  startTestRun(input: { serverId: $instanceId })
+}

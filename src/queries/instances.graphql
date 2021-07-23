@@ -1,0 +1,6 @@
+query instances {
+  instances {
+    identifier
+    name
+  }
+}

@@ -1,34 +1,17 @@
 import * as core from "@actions/core";
 import { GraphQLClient } from "graphql-request";
-import * as queries from "./queries";
+import { getSdk } from "./generated/requests";
 
-const operousUrl = "https://aba35aae5641.ngrok.io/graphql";
-const graphqlClient = new GraphQLClient(operousUrl);
+const operousUrl = "https://app.operous.dev/graphql";
+const graphqlClientBase = new GraphQLClient(operousUrl);
+const graphqlClient = getSdk(graphqlClientBase);
 
 const sleep = (date) => new Promise((resolve) => setTimeout(resolve, date));
 
 const trackTestRun = async (instanceName, testRunId) => {
-  enum statusEnum {
-    "FAILED",
-    "SUCCESS",
-    "RUNNING",
-  }
-  interface Test {
-    id: string;
-    passed: boolean;
-    suite: string;
-    text: string;
-  }
-  interface TestRunType {
-    number: number;
-    status: statusEnum;
-    time: Date;
-    tests: [Test];
-  }
-
   while (true) {
     const testRun = await graphqlClient
-      .request(queries.getInstance, {
+      .instance({
         testRunId: testRunId,
         instanceName: instanceName,
       })
@@ -52,7 +35,7 @@ const trackTestRun = async (instanceName, testRunId) => {
 
 const startTestRun = async (instanceId) => {
   return await graphqlClient
-    .request(queries.startTestRun, {
+    .startTestRun({
       instanceId: instanceId,
     })
     .then((response) => {
@@ -64,7 +47,7 @@ const startTestRun = async (instanceId) => {
 };
 
 const checkToken = async () => {
-  return await graphqlClient.request(queries.checkToken).then((response) => {
+  return await graphqlClient.checkToken().then((response) => {
     if (
       typeof response.checkToken === "string" &&
       response.checkToken === "Token is valid!"
@@ -78,7 +61,7 @@ const checkToken = async () => {
 };
 
 const getAccountInstance = async (instanceName) => {
-  return graphqlClient.request(queries.listInstances).then((response) => {
+  return await graphqlClient.instances().then((response) => {
     if (Array.isArray(response.instances)) {
       const matchedInstance = response.instances.filter(
         (instance) =>
@@ -94,7 +77,7 @@ async function main() {
     const instanceName = core.getInput("instanceName", { required: true });
     const accountToken = core.getInput("accountToken", { required: true });
 
-    graphqlClient.setHeader("Authorization", `Token ${accountToken}`);
+    graphqlClientBase.setHeader("Authorization", `Token ${accountToken}`);
 
     const isTokenValid = await checkToken();
     if (!isTokenValid) {
@@ -116,6 +99,13 @@ async function main() {
     const testsMessage = testRunData.tests
       .map((test) => `${test.passed ? "✅" : "❌"} ${test.id}: ${test.text}`)
       .join("\n");
+
+    const hasConnectivty = testRunData.tests.every(
+      (test) => test.passed != null
+    );
+    if (!hasConnectivty) {
+      throw "Operous could not reach the server. Please verify the instance connectivity";
+    }
     const hasAllPassed = testRunData.tests.every(
       (test) => test.passed === true
     );
