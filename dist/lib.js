@@ -74,11 +74,11 @@ const checkToken = async () => {
         }
     });
 };
-const getAccountInstance = async (serverId) => {
+const getAccountServer = async (serverId) => {
     return await graphqlClient.instances().then((response) => {
         if (Array.isArray(response.instances)) {
-            const matchedInstance = response.instances.filter((instance) => instance.name === serverId || instance.identifier === serverId)[0];
-            return matchedInstance;
+            const matchedServer = response.instances.filter((server) => server.name === serverId || server.identifier === serverId)[0];
+            return matchedServer;
         }
     });
 };
@@ -87,35 +87,35 @@ async function main() {
     const testsMessages = [];
     const serverIds = core.getInput("serverIds", { required: true }).split(",");
     const accountToken = core.getInput("accountToken", { required: true });
-    console.log("--->", serverIds);
     graphqlClientBase.setHeader("Authorization", `Token ${accountToken}`);
     const isTokenValid = await checkToken();
     if (!isTokenValid) {
-        throw "Invalid token. Please verify if the token has expired or been deleted";
+        throw "Invalid token. Please verify if the token has expired or been deleted.";
     }
     for (const serverId of serverIds) {
         try {
-            const instanceData = await getAccountInstance(serverId);
-            if (!instanceData) {
-                throw `No instance named ${serverId} found on this Operous account.`;
+            const serverData = await getAccountServer(serverId);
+            if (!serverData) {
+                throw `No server named ${serverId} found on this Operous account.`;
             }
-            const testRunId = await startTestRun(instanceData.identifier);
+            const testRunId = await startTestRun(serverData.identifier);
             if (!testRunId) {
-                throw `Could not start a new Test Run. Verify if the correct parameters were passed`;
+                throw `Could not start a new Test Run. Verify if the correct parameters were passed.`;
             }
             const testRunData = await trackTestRun(serverId, testRunId);
+            const hasConnectivty = testRunData.tests.every((test) => test.passed != null);
+            if (!hasConnectivty) {
+                throw `Operous could not reach the server. Please verify the server ${serverData.name} connectivity.`;
+            }
             const testsMessage = testRunData.tests
                 .map((test) => `${test.passed ? "✅" : "❌"} ${test.id}: ${test.text.replace("\n", "")}`)
                 .join("\n");
-            const hasConnectivty = testRunData.tests.every((test) => test.passed != null);
-            if (!hasConnectivty) {
-                throw `Operous could not reach the server. Please verify the instance ${instanceData} connectivity`;
-            }
             hasPassed.push(testRunData.tests.every((test) => test.passed === true));
-            testsMessages.push(`\n- ${instanceData.name} -\n` + testsMessage);
+            testsMessages.push(`\n- ${serverData.name} -\n` + testsMessage);
         }
         catch (error) {
-            testsMessages.push(error.message);
+            hasPassed.push(false);
+            testsMessages.push(`\n- Server Identifier:  ${serverId} -\n` + error);
         }
     }
     const finalMessage = testsMessages.join("\n");
@@ -128,4 +128,4 @@ async function main() {
     return finalMessage;
 }
 exports.main = main;
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=lib.js.map

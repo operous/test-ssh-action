@@ -2,17 +2,12 @@ name: Test action
 on:
   push:
     branches:
-      - main
+      - "feat/operous-action"
 jobs:
   test:
-    name: "Operous ssh test"
+    name: "Operous ssh test action"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - run: |
-          yarn
-      - name: Run Operous ssh test
-        uses: ./
-        with:
-          accountToken: ${{ secrets.OPEROUS_ACCOUNT_TOKEN }}
-          instanceName: ${{ secrets.OPEROUS_ACCOUNT_INSTANCE }}
+          yarn && yarn jest

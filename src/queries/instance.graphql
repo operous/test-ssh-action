@@ -1,5 +1,5 @@
-query instance($testRunId: Int!, $instanceName: String!) {
-  instance(input: { value: $instanceName, kind: NAME }) {
+query instance($testRunId: Int!, $serverId: String!) {
+  instance(input: { value: $serverId, kind: ID }) {
     name
     testRun(number: $testRunId) {
       number

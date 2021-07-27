@@ -326,7 +326,7 @@ export type CheckTokenMutation = (
 
 export type InstanceQueryVariables = Exact<{
   testRunId: Scalars['Int'];
-  instanceName: Scalars['String'];
+  serverId: Scalars['String'];
 }>;
 
 
@@ -358,7 +358,7 @@ export type InstancesQuery = (
 );
 
 export type StartTestRunMutationVariables = Exact<{
-  instanceId: Scalars['ID'];
+  serverId: Scalars['ID'];
 }>;
 
 
@@ -374,8 +374,8 @@ export const CheckTokenDocument = gql`
 }
     `;
 export const InstanceDocument = gql`
-    query instance($testRunId: Int!, $instanceName: String!) {
-  instance(input: {value: $instanceName, kind: NAME}) {
+    query instance($testRunId: Int!, $serverId: String!) {
+  instance(input: {value: $serverId, kind: ID}) {
     name
     testRun(number: $testRunId) {
       number
@@ -399,8 +399,8 @@ export const InstancesDocument = gql`
 }
     `;
 export const StartTestRunDocument = gql`
-    mutation startTestRun($instanceId: ID!) {
-  startTestRun(input: {serverId: $instanceId})
+    mutation startTestRun($serverId: ID!) {
+  startTestRun(input: {serverId: $serverId})
 }
     `;
 
