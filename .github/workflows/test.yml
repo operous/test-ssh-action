@@ -1,0 +1,13 @@
+name: Test action
+on:
+  push:
+    branches:
+      - "feat/operous-action"
+jobs:
+  test:
+    name: "Operous ssh test action"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          yarn && yarn jest

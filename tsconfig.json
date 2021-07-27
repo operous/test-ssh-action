@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2020",
+    "jsx": "preserve",
+    "strictFunctionTypes": true,
+    "sourceMap": true,
+    "rootDir": "./src",
+    "esModuleInterop": true
+  },
+  "exclude": [
+    "node_modules",
+    "**/node_modules/*",
+    "__tests__",
+    "**/__tests__/*"
+  ]
+}

@@ -1,0 +1,15 @@
+query instance($testRunId: Int!, $serverId: String!) {
+  instance(input: { value: $serverId, kind: ID }) {
+    name
+    testRun(number: $testRunId) {
+      number
+      status
+      time
+      tests {
+        id
+        passed
+        text
+      }
+    }
+  }
+}

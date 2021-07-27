@@ -1,0 +1,9 @@
+overwrite: true
+schema: "../operous/graphql/public.graphql"
+generates:
+  ./src/generated/requests.ts:
+    documents: ./src/queries/*.graphql
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-graphql-request
