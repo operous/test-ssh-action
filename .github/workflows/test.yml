@@ -2,7 +2,7 @@ name: Test action
 on:
   push:
     branches:
-      - "feat/operous-action"
+      - main
 jobs:
   test:
     name: "Operous ssh test action"
