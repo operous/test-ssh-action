@@ -1,17 +1,19 @@
 <p align="center">
   <a href="https://github.com/operous/test-ssh-action/">
-    <img width="200px" src="https://github.com/operous/test-ssh-action/raw/dev/assets/operous.svg">
+    <img width="200px" src="https://raw.githubusercontent.com/operous/test-ssh-action/main/assets/operous.png?token=AHG4HZGPQ6FQWMUIWBZWQDLBAGYV4">
   </a>
 </p>
 
 <h1 align="center">
-  Operous ssh test action
+  Operous SSH Test Action 🦥
 </h1>
 
+<p align="center">
 This GitHub Action will trigger an SSH test at Operous and return its results.
+</p>
 
 <p align="center">
-  <img src="https://github.com/JamesIves/fetch-api-data-action/raw/dev/assets/action-example.png">
+  <img src="https://raw.githubusercontent.com/operous/test-ssh-action/main/assets/action-example.png?token=AHG4HZAEX7VLQGB4HIGTYJ3BAGYT2">
 </p>
 
 ## Getting Started
