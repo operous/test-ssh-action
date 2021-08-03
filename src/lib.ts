@@ -7,6 +7,7 @@ const graphqlClientBase = new GraphQLClient(operousUrl);
 const graphqlClient = getSdk(graphqlClientBase);
 
 const trackTestRun = async (serverId, testRunId) => {
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     const testRun = await graphqlClient
       .instance({
@@ -70,6 +71,7 @@ const getAccountServer = async (serverId) => {
   });
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function main() {
   const hasPassed = [];
   const testsMessages = [];
