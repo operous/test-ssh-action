@@ -1,0 +1,14 @@
+
+name: Lint Typescript
+on: push
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Node
+      uses: actions/setup-node@v2
+      with:
+        cache: 'yarn'
+    - run: yarn
+    - run: find ./ -name ".eslintrc.*" | grep -v "node_modules" && ./node_modules/eslint/bin/eslint.js --ext .ts . || eslint --no-eslintrc --ext .ts .
