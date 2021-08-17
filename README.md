@@ -53,3 +53,10 @@ The following configuration options should be set.
 | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | `accountToken` | Your Operous account API token. Follow this [guide](https://docs.operous.dev/operous/api/register-api-token.html) if you need to create one. |
 | `serverIds`    | The server identifier you can get on the Operous page in the detailed information of the server.                                             |
+
+## Development
+
+- First install the dependencies with `yarn`
+- Run the tests with `yarn jest`
+- Update the generated javascript code using the typescript compiler `node_modules/.bin/tsc --watch --outDir dist`
+- To update generated functions for the GraphQL API use `node_modules/.bin/graphql-code-generator --config codegen.yml`

@@ -3,13 +3,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSdk = exports.StartTestRunDocument = exports.InstancesDocument = exports.InstanceDocument = exports.CheckTokenDocument = exports.TestRunStatus = exports.InstanceFilterKind = exports.Errors = void 0;
+exports.getSdk = exports.StartTestRunDocument = exports.ServersDocument = exports.ServerDocument = exports.CheckTokenDocument = exports.TestRunStatus = exports.ServerFilterKind = exports.Errors = void 0;
 const graphql_tag_1 = __importDefault(require("graphql-tag"));
 /** Errors the API can return */
 var Errors;
 (function (Errors) {
     /**
-     * The token used to register the instance is invalid.
+     * The token used to register the server is invalid.
      * Maybe it expired, maybe it never existed.
      */
     Errors["InvalidServerRegisterToken"] = "INVALID_SERVER_REGISTER_TOKEN";
@@ -26,20 +26,20 @@ var Errors;
      */
     Errors["AccountQuotaCheck"] = "ACCOUNT_QUOTA_CHECK";
 })(Errors = exports.Errors || (exports.Errors = {}));
-/** Determines which attribute from the instance will be used to filter */
-var InstanceFilterKind;
-(function (InstanceFilterKind) {
-    /** The Instance external ID */
-    InstanceFilterKind["Id"] = "ID";
-    /** The Instance name */
-    InstanceFilterKind["Name"] = "NAME";
-})(InstanceFilterKind = exports.InstanceFilterKind || (exports.InstanceFilterKind = {}));
+/** Determines which attribute from the server will be used to filter */
+var ServerFilterKind;
+(function (ServerFilterKind) {
+    /** The server external ID */
+    ServerFilterKind["Id"] = "ID";
+    /** The server name */
+    ServerFilterKind["Name"] = "NAME";
+})(ServerFilterKind = exports.ServerFilterKind || (exports.ServerFilterKind = {}));
 /** Status available for a test run */
 var TestRunStatus;
 (function (TestRunStatus) {
     /** The Test Run could not run or it finished with some failing tests */
     TestRunStatus["Failed"] = "FAILED";
-    /** The Test Run finished execution with success, and the instance passed in all the tests */
+    /** The Test Run finished execution with success, and the server passed in all the tests */
     TestRunStatus["Success"] = "SUCCESS";
     /** The Test Run is still in progress */
     TestRunStatus["Running"] = "RUNNING";
@@ -49,9 +49,9 @@ exports.CheckTokenDocument = graphql_tag_1.default `
   checkToken
 }
     `;
-exports.InstanceDocument = graphql_tag_1.default `
-    query instance($testRunId: Int!, $serverId: String!) {
-  instance(input: {value: $serverId, kind: ID}) {
+exports.ServerDocument = graphql_tag_1.default `
+    query server($testRunId: Int!, $serverId: String!) {
+  server(input: {value: $serverId, kind: ID}) {
     name
     testRun(number: $testRunId) {
       number
@@ -66,9 +66,9 @@ exports.InstanceDocument = graphql_tag_1.default `
   }
 }
     `;
-exports.InstancesDocument = graphql_tag_1.default `
-    query instances {
-  instances {
+exports.ServersDocument = graphql_tag_1.default `
+    query servers {
+  servers {
     identifier
     name
   }
@@ -85,11 +85,11 @@ function getSdk(client, withWrapper = defaultWrapper) {
         checkToken(variables, requestHeaders) {
             return withWrapper((wrappedRequestHeaders) => client.request(exports.CheckTokenDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }), 'checkToken');
         },
-        instance(variables, requestHeaders) {
-            return withWrapper((wrappedRequestHeaders) => client.request(exports.InstanceDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }), 'instance');
+        server(variables, requestHeaders) {
+            return withWrapper((wrappedRequestHeaders) => client.request(exports.ServerDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }), 'server');
         },
-        instances(variables, requestHeaders) {
-            return withWrapper((wrappedRequestHeaders) => client.request(exports.InstancesDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }), 'instances');
+        servers(variables, requestHeaders) {
+            return withWrapper((wrappedRequestHeaders) => client.request(exports.ServersDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }), 'servers');
         },
         startTestRun(variables, requestHeaders) {
             return withWrapper((wrappedRequestHeaders) => client.request(exports.StartTestRunDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }), 'startTestRun');

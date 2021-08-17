@@ -1,5 +1,5 @@
 overwrite: true
-schema: "../operous/graphql/public.graphql"
+schema: "https://app.operous.dev/graphql"
 generates:
   ./src/generated/requests.ts:
     documents: ./src/queries/*.graphql

@@ -27,14 +27,15 @@ const operousUrl = "https://app.operous.dev/graphql";
 const graphqlClientBase = new graphql_request_1.GraphQLClient(operousUrl);
 const graphqlClient = requests_1.getSdk(graphqlClientBase);
 const trackTestRun = async (serverId, testRunId) => {
+    // eslint-disable-next-line no-constant-condition
     while (true) {
         const testRun = await graphqlClient
-            .instance({
+            .server({
             testRunId: testRunId,
             serverId: serverId,
         })
             .then((response) => {
-            return response.instance.testRun;
+            return response.server.testRun;
         });
         switch (testRun.status) {
             case "FAILED":
@@ -75,13 +76,14 @@ const checkToken = async () => {
     });
 };
 const getAccountServer = async (serverId) => {
-    return await graphqlClient.instances().then((response) => {
-        if (Array.isArray(response.instances)) {
-            const matchedServer = response.instances.filter((server) => server.name === serverId || server.identifier === serverId)[0];
+    return await graphqlClient.servers().then((response) => {
+        if (Array.isArray(response.servers)) {
+            const matchedServer = response.servers.filter((server) => server.name === serverId || server.identifier === serverId)[0];
             return matchedServer;
         }
     });
 };
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 async function main() {
     const hasPassed = [];
     const testsMessages = [];

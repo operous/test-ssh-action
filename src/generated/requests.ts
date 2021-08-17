@@ -16,9 +16,9 @@ export type Scalars = {
   DateTime: any;
 };
 
-/** Information used to confirm the instance registration at Operous */
+/** Information used to confirm the server registration at Operous */
 export type ConfirmRegistrationInput = {
-  /** The token used to register the instance */
+  /** The token used to register the server */
   token: Scalars['String'];
 };
 
@@ -26,7 +26,7 @@ export type ConfirmRegistrationInput = {
 /** Errors the API can return */
 export enum Errors {
   /**
-   * The token used to register the instance is invalid.
+   * The token used to register the server is invalid.
    * Maybe it expired, maybe it never existed.
    */
   InvalidServerRegisterToken = 'INVALID_SERVER_REGISTER_TOKEN',
@@ -44,59 +44,24 @@ export enum Errors {
   AccountQuotaCheck = 'ACCOUNT_QUOTA_CHECK'
 }
 
-/** Receives a hash with the attribute to filter the instance result and its value */
-export type GetInstanceInput = {
+/** Receives a hash with the attribute to filter the server result and its value */
+export type GetServerInput = {
   /** Attribute value used to filter */
   value: Scalars['String'];
-  /** An enum to determine which attribute from the instance will be used to filter */
-  kind: InstanceFilterKind;
+  /** An enum to determine which attribute from the server will be used to filter */
+  kind: ServerFilterKind;
 };
 
-/**
- * A physical or virtual on-premise, private, or public cloud instance that must
- * be registered to be tested by Operous. An Instance must belong to an Operous
- * account.
- */
-export type Instance = {
-  __typename?: 'Instance';
-  /** The Instance immutable identifier */
-  identifier: Scalars['ID'];
-  /** A name for this Instance, can be edited */
-  name: Scalars['String'];
-  /** Instance specific Test Run information */
-  testRun?: Maybe<TestRun>;
-  /** Instance list of Test Runs */
-  testRuns: Array<TestRun>;
-};
-
-
-/**
- * A physical or virtual on-premise, private, or public cloud instance that must
- * be registered to be tested by Operous. An Instance must belong to an Operous
- * account.
- */
-export type InstanceTestRunArgs = {
-  number: Scalars['Int'];
-};
-
-/** Determines which attribute from the instance will be used to filter */
-export enum InstanceFilterKind {
-  /** The Instance external ID */
-  Id = 'ID',
-  /** The Instance name */
-  Name = 'NAME'
-}
-
-/** Information used to filter the instances on the instances query */
-export type ListInstanceInput = {
-  /** List of instance identifiers */
+/** Information used to filter the servers on the servers query */
+export type ListServerInput = {
+  /** List of server identifiers */
   identifier?: Maybe<Array<Scalars['ID']>>;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
   /**
-   * Starts the register of a new instance on the Operous account
+   * Starts the register of a new server on the Operous account
    *
    * Example:
    *
@@ -120,7 +85,7 @@ export type Mutation = {
    */
   registerServer?: Maybe<RegisterServerResponse>;
   /**
-   * Confirms the instance registration at Operous
+   * Confirms the server registration at Operous
    *
    * Example:
    *
@@ -154,7 +119,7 @@ export type Mutation = {
    */
   checkToken: Scalars['String'];
   /**
-   * Starts an SSH test run on a determined instance
+   * Starts an SSH test run on a determined server
    *
    * Example:
    *
@@ -191,13 +156,13 @@ export type MutationStartTestRunArgs = {
 export type Query = {
   __typename?: 'Query';
   /**
-   * Get a single instance data according to the filter used
+   * Get a single server data according to the filter used
    *
    * Example:
    *
    * Query:
    * {
-   *   instance(input:{value: "ubiquitous-chicken-8974", kind:NAME}){
+   *   server(input:{value: "ubiquitous-chicken-8974", kind:NAME}){
    *     identifier
    *     name
    *   }
@@ -206,22 +171,22 @@ export type Query = {
    * Response:
    * {
    *   "data":  {
-   *     "instance": {
+   *     "server": {
    *       "identifier": "7QiCIABxXyXe",
    *       "name": "webapp-01"
    *     }
    *   }
    * }
    */
-  instance?: Maybe<Instance>;
+  server?: Maybe<Server>;
   /**
-   * Get all account instances registered can be filtered by a list of the instance identifiers
+   * Get all account servers registered can be filtered by a list of the server identifiers
    *
    * Example:
    *
    * Query:
    * {
-   *   instances {
+   *   servers {
    *     identifier
    *     name
    *   }
@@ -230,7 +195,7 @@ export type Query = {
    * Response:
    * {
    *   "data": {
-   *     "instances": [
+   *     "servers": [
    *       {
    *         "identifier": "gMAjMO8mkmhsFRxW",
    *         "name": "ancient-rock-700"
@@ -243,39 +208,74 @@ export type Query = {
    *   }
    * }
    */
-  instances: Array<Instance>;
+  servers: Array<Server>;
 };
 
 
-export type QueryInstanceArgs = {
-  input: GetInstanceInput;
+export type QueryServerArgs = {
+  input: GetServerInput;
 };
 
 
-export type QueryInstancesArgs = {
-  input?: Maybe<ListInstanceInput>;
+export type QueryServersArgs = {
+  input?: Maybe<ListServerInput>;
 };
 
-/** Information used to register a new instance on the Operous account */
+/** Information used to register a new server on the Operous account */
 export type RegisterServerInput = {
-  /** The token used to register the instance */
+  /** The token used to register the server */
   token: Scalars['String'];
   /** A list of IPs separated by spaces */
   ssvIps: Scalars['String'];
-  /** The port used to perform an SSH connection at this instance */
+  /** The port used to perform an SSH connection at this server */
   sshPort: Scalars['Int'];
 };
 
-/** The register will respond with the CA key to be configured on the instance */
+/** The register will respond with the CA key to be configured on the server */
 export type RegisterServerResponse = {
   __typename?: 'RegisterServerResponse';
   /** Certificate authority key */
   ca: Scalars['String'];
 };
 
+/**
+ * A physical or virtual on-premise, private, or public cloud server that must
+ * be registered to be tested by Operous. A server must belong to an Operous
+ * account.
+ */
+export type Server = {
+  __typename?: 'Server';
+  /** The server immutable identifier */
+  identifier: Scalars['ID'];
+  /** A name for this server, can be edited */
+  name: Scalars['String'];
+  /** Server specific Test Run information */
+  testRun?: Maybe<TestRun>;
+  /** Server list of Test Runs */
+  testRuns: Array<TestRun>;
+};
+
+
+/**
+ * A physical or virtual on-premise, private, or public cloud server that must
+ * be registered to be tested by Operous. A server must belong to an Operous
+ * account.
+ */
+export type ServerTestRunArgs = {
+  number: Scalars['Int'];
+};
+
+/** Determines which attribute from the server will be used to filter */
+export enum ServerFilterKind {
+  /** The server external ID */
+  Id = 'ID',
+  /** The server name */
+  Name = 'NAME'
+}
+
 /** Information used to start a Test Run at Operous */
 export type StartTestRunInput = {
-  /** Instance identifier */
+  /** server identifier */
   serverId: Scalars['ID'];
 };
 
@@ -290,12 +290,12 @@ export type Test = {
   passed?: Maybe<Scalars['Boolean']>;
 };
 
-/** A Test Run that is running or already was executed at an Instance */
+/** A Test Run that is running or already was executed at a server */
 export type TestRun = {
   __typename?: 'TestRun';
   /**
-   * This number is scoped to the instance. If the number is 4, this Test Run
-   * instance represents the fourth test execution in the related Instance.
+   * This number is scoped to the server. If the number is 4, this Test Run
+   * server represents the fourth test execution in the related server.
    */
   number: Scalars['Int'];
   /** The Test Run start time */
@@ -310,7 +310,7 @@ export type TestRun = {
 export enum TestRunStatus {
   /** The Test Run could not run or it finished with some failing tests */
   Failed = 'FAILED',
-  /** The Test Run finished execution with success, and the instance passed in all the tests */
+  /** The Test Run finished execution with success, and the server passed in all the tests */
   Success = 'SUCCESS',
   /** The Test Run is still in progress */
   Running = 'RUNNING'
@@ -324,17 +324,17 @@ export type CheckTokenMutation = (
   & Pick<Mutation, 'checkToken'>
 );
 
-export type InstanceQueryVariables = Exact<{
+export type ServerQueryVariables = Exact<{
   testRunId: Scalars['Int'];
   serverId: Scalars['String'];
 }>;
 
 
-export type InstanceQuery = (
+export type ServerQuery = (
   { __typename?: 'Query' }
-  & { instance?: Maybe<(
-    { __typename?: 'Instance' }
-    & Pick<Instance, 'name'>
+  & { server?: Maybe<(
+    { __typename?: 'Server' }
+    & Pick<Server, 'name'>
     & { testRun?: Maybe<(
       { __typename?: 'TestRun' }
       & Pick<TestRun, 'number' | 'status' | 'time'>
@@ -346,14 +346,14 @@ export type InstanceQuery = (
   )> }
 );
 
-export type InstancesQueryVariables = Exact<{ [key: string]: never; }>;
+export type ServersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type InstancesQuery = (
+export type ServersQuery = (
   { __typename?: 'Query' }
-  & { instances: Array<(
-    { __typename?: 'Instance' }
-    & Pick<Instance, 'identifier' | 'name'>
+  & { servers: Array<(
+    { __typename?: 'Server' }
+    & Pick<Server, 'identifier' | 'name'>
   )> }
 );
 
@@ -373,9 +373,9 @@ export const CheckTokenDocument = gql`
   checkToken
 }
     `;
-export const InstanceDocument = gql`
-    query instance($testRunId: Int!, $serverId: String!) {
-  instance(input: {value: $serverId, kind: ID}) {
+export const ServerDocument = gql`
+    query server($testRunId: Int!, $serverId: String!) {
+  server(input: {value: $serverId, kind: ID}) {
     name
     testRun(number: $testRunId) {
       number
@@ -390,9 +390,9 @@ export const InstanceDocument = gql`
   }
 }
     `;
-export const InstancesDocument = gql`
-    query instances {
-  instances {
+export const ServersDocument = gql`
+    query servers {
+  servers {
     identifier
     name
   }
@@ -414,11 +414,11 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     checkToken(variables?: CheckTokenMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CheckTokenMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CheckTokenMutation>(CheckTokenDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'checkToken');
     },
-    instance(variables: InstanceQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<InstanceQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<InstanceQuery>(InstanceDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'instance');
+    server(variables: ServerQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ServerQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ServerQuery>(ServerDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'server');
     },
-    instances(variables?: InstancesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<InstancesQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<InstancesQuery>(InstancesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'instances');
+    servers(variables?: ServersQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ServersQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ServersQuery>(ServersDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'servers');
     },
     startTestRun(variables: StartTestRunMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<StartTestRunMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<StartTestRunMutation>(StartTestRunDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'startTestRun');
