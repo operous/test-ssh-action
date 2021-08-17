@@ -1,0 +1,6 @@
+query servers {
+  servers {
+    identifier
+    name
+  }
+}

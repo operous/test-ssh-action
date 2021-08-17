@@ -19,9 +19,9 @@ jest.mock("../src/generated/requests", () => ({
         checkToken: "Token is valid!",
       };
     },
-    instances: async function () {
+    servers: async function () {
       return {
-        instances: [
+        servers: [
           {
             identifier: "id1",
             name: "ancient-rock-700",
@@ -38,11 +38,11 @@ jest.mock("../src/generated/requests", () => ({
         startTestRun: 3,
       };
     },
-    instance: jest
+    server: jest
       .fn()
       .mockImplementationOnce(async function () {
         return {
-          instance: {
+          server: {
             identifier: "id1",
             name: "ancient-rock-700",
             testRun: {
@@ -54,7 +54,7 @@ jest.mock("../src/generated/requests", () => ({
       })
       .mockImplementationOnce(async function () {
         return {
-          instance: {
+          server: {
             identifier: "id1",
             name: "ancient-rock-700",
             testRun: {
@@ -88,7 +88,7 @@ jest.mock("../src/generated/requests", () => ({
       })
       .mockImplementationOnce(async function () {
         return {
-          instance: {
+          server: {
             identifier: "id2",
             name: "webapp-01",
             testRun: {
@@ -100,7 +100,7 @@ jest.mock("../src/generated/requests", () => ({
       })
       .mockImplementationOnce(async function () {
         return {
-          instance: {
+          server: {
             identifier: "id2",
             name: "webapp-01",
             testRun: {
