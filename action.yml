@@ -1,4 +1,4 @@
-name: "Operous ssh check"
+name: "Operous SSH Check"
 description: "SSH server vulnerability and security scanner with Operous"
 author: "Operous <talk@operous.dev>"
 inputs:
