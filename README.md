@@ -52,7 +52,7 @@ The following configuration options should be set.
 | Key            | Value Information                                                                                                                            |
 | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | `accountToken` | Your Operous account API token. Follow this [guide](https://docs.operous.dev/operous/api/register-api-token.html) if you need to create one. |
-| `serverIds`    | The server identifier you can get on the Operous page in the detailed information of the server.                                             |
+| `serverIds`    | A list of server identifiers you can get on the server detailed information page at Operous.                                                 |
 
 ## Development
 

@@ -8,7 +8,9 @@ inputs:
   accountToken:
     required: true
     description: "Operous account API token"
-
 runs:
   using: "node12"
   main: "dist/main.js"
+branding:
+  icon: "play"
+  color: "blue"
