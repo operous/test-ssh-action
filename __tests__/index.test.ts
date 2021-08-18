@@ -19,20 +19,24 @@ jest.mock("../src/generated/requests", () => ({
         checkToken: "Token is valid!",
       };
     },
-    servers: async function () {
-      return {
-        servers: [
-          {
+    uniqueServer: jest
+      .fn()
+      .mockImplementationOnce(async function () {
+        return {
+          server: {
             identifier: "id1",
             name: "ancient-rock-700",
           },
-          {
+        };
+      })
+      .mockImplementationOnce(async function () {
+        return {
+          server: {
             identifier: "id2",
             name: "webapp-01",
           },
-        ],
-      };
-    },
+        };
+      }),
     startTestRun: async function () {
       return {
         startTestRun: 3,

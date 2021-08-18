@@ -61,14 +61,11 @@ const checkToken = async () => {
 };
 
 const getAccountServer = async (serverId) => {
-  return await graphqlClient.servers().then((response) => {
-    if (Array.isArray(response.servers)) {
-      const matchedServer = response.servers.filter(
-        (server) => server.name === serverId || server.identifier === serverId
-      )[0];
-      return matchedServer;
-    }
-  });
+  return await graphqlClient
+    .uniqueServer({ serverId: serverId })
+    .then((response) => {
+      return response.server;
+    });
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

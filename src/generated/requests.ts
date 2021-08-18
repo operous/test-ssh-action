@@ -346,17 +346,6 @@ export type ServerQuery = (
   )> }
 );
 
-export type ServersQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type ServersQuery = (
-  { __typename?: 'Query' }
-  & { servers: Array<(
-    { __typename?: 'Server' }
-    & Pick<Server, 'identifier' | 'name'>
-  )> }
-);
-
 export type StartTestRunMutationVariables = Exact<{
   serverId: Scalars['ID'];
 }>;
@@ -365,6 +354,19 @@ export type StartTestRunMutationVariables = Exact<{
 export type StartTestRunMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'startTestRun'>
+);
+
+export type UniqueServerQueryVariables = Exact<{
+  serverId: Scalars['String'];
+}>;
+
+
+export type UniqueServerQuery = (
+  { __typename?: 'Query' }
+  & { server?: Maybe<(
+    { __typename?: 'Server' }
+    & Pick<Server, 'name' | 'identifier'>
+  )> }
 );
 
 
@@ -390,17 +392,17 @@ export const ServerDocument = gql`
   }
 }
     `;
-export const ServersDocument = gql`
-    query servers {
-  servers {
-    identifier
-    name
-  }
-}
-    `;
 export const StartTestRunDocument = gql`
     mutation startTestRun($serverId: ID!) {
   startTestRun(input: {serverId: $serverId})
+}
+    `;
+export const UniqueServerDocument = gql`
+    query uniqueServer($serverId: String!) {
+  server(input: {value: $serverId, kind: ID}) {
+    name
+    identifier
+  }
 }
     `;
 
@@ -417,11 +419,11 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     server(variables: ServerQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ServerQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<ServerQuery>(ServerDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'server');
     },
-    servers(variables?: ServersQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ServersQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<ServersQuery>(ServersDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'servers');
-    },
     startTestRun(variables: StartTestRunMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<StartTestRunMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<StartTestRunMutation>(StartTestRunDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'startTestRun');
+    },
+    uniqueServer(variables: UniqueServerQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UniqueServerQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UniqueServerQuery>(UniqueServerDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'uniqueServer');
     }
   };
 }

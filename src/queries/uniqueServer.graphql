@@ -1,0 +1,6 @@
+query uniqueServer($serverId: String!) {
+  server(input: { value: $serverId, kind: ID }) {
+    name
+    identifier
+  }
+}

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSdk = exports.StartTestRunDocument = exports.ServersDocument = exports.ServerDocument = exports.CheckTokenDocument = exports.TestRunStatus = exports.ServerFilterKind = exports.Errors = void 0;
+exports.getSdk = exports.UniqueServerDocument = exports.StartTestRunDocument = exports.ServerDocument = exports.CheckTokenDocument = exports.TestRunStatus = exports.ServerFilterKind = exports.Errors = void 0;
 const graphql_tag_1 = __importDefault(require("graphql-tag"));
 /** Errors the API can return */
 var Errors;
@@ -66,17 +66,17 @@ exports.ServerDocument = graphql_tag_1.default `
   }
 }
     `;
-exports.ServersDocument = graphql_tag_1.default `
-    query servers {
-  servers {
-    identifier
-    name
-  }
-}
-    `;
 exports.StartTestRunDocument = graphql_tag_1.default `
     mutation startTestRun($serverId: ID!) {
   startTestRun(input: {serverId: $serverId})
+}
+    `;
+exports.UniqueServerDocument = graphql_tag_1.default `
+    query uniqueServer($serverId: String!) {
+  server(input: {value: $serverId, kind: ID}) {
+    name
+    identifier
+  }
 }
     `;
 const defaultWrapper = (action, _operationName) => action();
@@ -88,11 +88,11 @@ function getSdk(client, withWrapper = defaultWrapper) {
         server(variables, requestHeaders) {
             return withWrapper((wrappedRequestHeaders) => client.request(exports.ServerDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }), 'server');
         },
-        servers(variables, requestHeaders) {
-            return withWrapper((wrappedRequestHeaders) => client.request(exports.ServersDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }), 'servers');
-        },
         startTestRun(variables, requestHeaders) {
             return withWrapper((wrappedRequestHeaders) => client.request(exports.StartTestRunDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }), 'startTestRun');
+        },
+        uniqueServer(variables, requestHeaders) {
+            return withWrapper((wrappedRequestHeaders) => client.request(exports.UniqueServerDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }), 'uniqueServer');
         }
     };
 }
