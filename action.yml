@@ -10,7 +10,7 @@ inputs:
     description: "Operous account API token"
 runs:
   using: "node12"
-  main: "dist/main.js"
+  main: "dist/index.js"
 branding:
   icon: "play"
   color: "blue"
