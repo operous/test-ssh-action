@@ -57,6 +57,5 @@ The following configuration options should be set.
 ## Development
 
 - First install the dependencies with `yarn`
+- Build and generate the code with `yarn build`
 - Run the tests with `yarn jest`
-- Update the generated javascript code using the typescript compiler `node_modules/.bin/tsc --watch --outDir dist`
-- To update generated functions for the GraphQL API use `node_modules/.bin/graphql-code-generator --config codegen.yml`
