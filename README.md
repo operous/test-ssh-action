@@ -18,6 +18,44 @@ This GitHub Action will trigger an SSH test at Operous and return its results.
 
 ## Getting Started
 
+To configure the action, you will need to get your server IDs at Operous and write the workflow YAML accordingly.
+
+### How get your registered servers IDs
+
+There are two ways you can get your servers IDs:
+
+- Acessing the server details page as follows:
+  <img src="https://raw.githubusercontent.com/operous/test-ssh-action/main/assets/id_screen.gif">
+
+- Using the public API to get multiple IDs at once:
+
+  - Create a public API token following the [guide](https://docs.operous.dev/operous/api/register-api-token.html);
+  - Mount a simple request using the `servers` query:
+    1. ```bash
+       curl -X POST \
+         -H 'Authorization: Token <Your created token>' \
+         -H 'Content-Type: application/json' \
+         -d '{"query":"{ servers { name identifier }}"}' \
+       'https://app.operous.dev/graphql'
+       ```
+    2. ```json
+       {
+         "data": {
+           "servers": [
+             { "name": "ancient-rock-700", "identifier": "gMAjMO8mkmhsFRxW" },
+             {
+               "name": "snobbish-friend-3818",
+               "identifier": "SnmjBjasb5TgadQk"
+             },
+             { "name": "tan-cakes-6272", "identifier": "hCkhyiR5eT7kXjs5" },
+             { "name": "naive-blow-9270", "identifier": "wDK3idtzjWlsezC9" }
+           ]
+         }
+       }
+       ```
+
+### Mounting the workflow YAML
+
 You can include the action in your workflow to trigger on any event that [GitHub actions supports](https://help.github.com/en/articles/events-that-trigger-workflows). You'll need to provide the action with your [API Token](https://docs.operous.dev/operous/api/register-api-token.html) from you [Operous](https://operous.dev/) account.
 
 In the example below, a push on the main branch will start the SSH test on the registered servers with the provided identifier.
@@ -35,7 +73,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run Operous ssh test
-        uses: operous/test-ssh-action@releases/v1
+        uses: operous/test-ssh-action@0.1.0-rc.3
         with:
           accountToken: ${{ secrets.OPEROUS_ACCOUNT_TOKEN }}
           serverIds: "SnmjBjasb5TgadQk,gMAjMO8mkmhsFRxW,hCkhyiR5eT7kXjs5"
