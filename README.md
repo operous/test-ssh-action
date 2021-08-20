@@ -29,7 +29,7 @@ There are two ways you can get your servers IDs:
 
 - Using the public API to get multiple IDs at once:
 
-  - Create a public API token following the [guide](https://docs.operous.dev/operous/api/register-api-token.html);
+  - Create a public API token following this [guide](https://docs.operous.dev/operous/api/register-api-token.html);
   - Mount a simple request using the `servers` query:
     1. ```bash
        curl -X POST \
